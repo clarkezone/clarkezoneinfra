@@ -1,0 +1,60 @@
+#ansiblk-playbook makehost-do.yml
+---
+- hosts: localhost
+  connection: local
+ 
+  vars_files:
+       - vars/default.yml 
+  
+  tasks:
+    - name: Show Droplet info
+      ansible.builtin.debug:
+        msg: |
+          {{ oauth_token }}
+          foo
+    - name: Create SSH key
+      community.digitalocean.digital_ocean_sshkey:
+        oauth_token: "{{ oauth_token }}"
+        name: ansible_server
+        ssh_pub_key: "{{ copy_local_key }}"
+        state: present
+      register: my_ssh_key
+  
+    - name: Create a new Droplet
+      community.digitalocean.digital_ocean_droplet:
+        oauth_token: "{{ oauth_token }}"
+        state: present
+        name: "{{ do_host_name }}"
+        unique_name: true
+        size: "{{ do_size }}"
+        region: sfo3
+        image: ubuntu-21-10-x64
+        wait_timeout: 500
+        ssh_keys:
+          - "{{ my_ssh_key.data.ssh_key.id }}"
+      register: my_droplet
+  
+    - name: Show Droplet info
+      ansible.builtin.debug:
+        msg: |
+          Droplet ID is {{ my_droplet.data.droplet.id }}
+          First Public IPv4 is {{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }}
+          First Private IPv4 is {{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'private')).0.ip_address | default('<none>', true) }}
+  
+    - name: Tag a resource; creating the tag if it does not exist
+      community.digitalocean.digital_ocean_tag:
+        oauth_token: "{{ oauth_token }}"
+        name: "{{ item }}"
+        resource_id: "{{ my_droplet.data.droplet.id }}"
+        state: present
+      loop:
+        - devbox
+
+    - name: write local
+      community.general.ini_file:
+        path: "{{ playbook_dir }}/../hosts_for_devbox.ini"
+        section: monitoring
+        create: yes
+        allow_no_value: true
+        option: "{{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }} host_name={{ do_host_name }}"
+
