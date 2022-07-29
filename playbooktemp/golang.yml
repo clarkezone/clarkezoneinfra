@@ -1,0 +1,156 @@
+# ansible-playbook -i inventory/devbox.ini -u james playbooktemp/golang.yml -K 
+# TODO: how to store become password in vault?
+---
+- hosts: all
+  become: true
+
+  vars_files:
+  - ../vars/devboxtemp.yml
+
+  vars:
+   sys_packages: [ 'build-essential', 'manpages-dev', ]
+
+  tasks:
+# TODO: is there a generic build-essential?
+#    - name: Install buildtools
+#      ansible.builtin.package:
+#        name:
+#          - build-esential
+#        state: latest
+
+    - name: Install required system packages
+      apt: name={{ sys_packages }} state=latest
+
+    # kill this on merge
+    - name: Zsh-ohmyzsh
+      include_role:
+        name: gantsign.oh-my-zsh
+      vars:
+        ansible_become: yes
+        users:
+          - username: "{{ current_user }}" #TODO can this be removed and use user instead in substitutions?
+            oh_my_zsh:
+              theme: awesomepanda
+              plugins:
+                - git
+
+    - name: Download and Expand Go
+      unarchive:
+        remote_src: yes
+        src: "https://go.dev/dl/go1.18.4.linux-amd64.tar.gz"
+        dest: "{{ local_dir }}"
+        creates: "{{ golang_dir }}"
+
+    - name: Ensure golang in path
+      ansible.builtin.lineinfile:
+        path: "/home/{{ current_user }}/.zshrc"
+        line: 'export PATH={{ golang_dir }}/bin:$PATH'
+        insertafter: EOF
+
+    - name: Ensure golang local binaries in path
+      ansible.builtin.lineinfile:
+        path: "/home/{{ current_user }}/.zshrc"
+        line: 'export PATH=$PATH:$HOME/go/bin'
+        insertafter: EOF
+
+    - name: AzCli
+      block:
+        - name: microsoft pgpkey
+          ansible.builtin.get_url:
+            url: https://packages.microsoft.com/keys/microsoft.asc
+            dest: /etc/apt/trusted.gpg.d/microsoft.asc
+
+        - name: azcli repo
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/microsoft.asc] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
+            state: present
+
+        - name: Install azcli
+          apt: 
+            name: azure-cli
+            update_cache: yes
+
+    - name: gh
+      block:
+        - name: github pgpkey
+          ansible.builtin.get_url:
+            url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+            dest: /etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
+
+        - name: gh repo
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+            state: present
+
+        - name: Install gh
+          apt: 
+            name: gh
+            update_cache: yes
+
+# install .net 6
+    - name: Download .NET6 debian package
+      get_url:
+        url: "https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb"
+        dest: "{{ download_dir }}"
+
+    - name: Install a .deb package from the internet
+      ansible.builtin.apt:
+        deb: "{{ download_dir }}/packages-microsoft-prod.deb"
+
+    - name: Install dotnet6 sdk
+      apt: 
+        name: dotnet-sdk-6.0
+        update_cache: yes
+
+    - name: Download code server
+      get_url:
+        url: https://code-server.dev/install.sh
+        dest: "{{ download_dir }}/code-server-install.sh"
+        mode: 0755
+
+    - name: Run setup
+      command: /tmp/code-server-install.sh
+      args:
+        chdir: "{{ download_dir }}"
+        creates: /usr/bin/code-server
+
+    - name: codeserver configdir
+      ansible.builtin.file:
+        path: "/home/{{ current_user }}/.config/code-server"
+        state: directory
+        group: "{{ current_user }}"
+        owner: "{{ current_user }}"
+        mode: '0700'
+
+    - name: Copy code-server config
+      copy:
+        src: "{{ playbook_dir }}/files/dotfiles/.config/code-server/config.yaml"
+        dest: "/home/{{ current_user }}/.config/code-server/config.yaml"
+        backup: no
+        group: "{{ current_user }}"
+        owner: "{{ current_user }}"
+        mode: 0755
+
+    - name: Start code-server service
+      service: 
+        name: code-server@james.service
+        enabled: yes
+        state: started
+
+    - name: Download azure dev cli
+      get_url:
+        url: https://aka.ms/install-azd.sh
+        dest: "{{ download_dir }}/install-azd.sh"
+        mode: 0755
+
+    - name: Run setup for azd
+      command: /tmp/install-azd.sh
+      args:
+        chdir: "{{ download_dir }}"
+        creates: /usr/local/bin/azd
+
+# azcli autocompletion
+# gh autocompletion
+# devcli autocompletion
+# dotnet autocompletion
+

@@ -4,7 +4,7 @@
   connection: local
  
   vars_files:
-       - vars/default.yml 
+       - ../vars/default.yml 
   
   tasks:
     - name: Show Droplet info
@@ -52,7 +52,7 @@
 
     - name: write local
       community.general.ini_file:
-        path: "{{ playbook_dir }}/../hosts_for_devbox.ini"
+        path: "{{ playbook_dir }}/../inventory/hosts_for_monitoring.ini"
         section: monitoring
         create: yes
         allow_no_value: true
