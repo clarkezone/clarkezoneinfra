@@ -53,6 +53,7 @@
         line: 'export PATH=$PATH:$HOME/go/bin'
         insertafter: EOF
 
+# AZCli
     - name: AzCli
       block:
         - name: microsoft pgpkey
@@ -70,6 +71,33 @@
             name: azure-cli
             update_cache: yes
 
+        - name: az config dir
+          ansible.builtin.file:
+            path: "/home/{{ current_user }}/.config/az"
+            state: directory
+            group: "{{ current_user }}"
+            owner: "{{ current_user }}"
+            mode: '0700'
+
+        - name: Download az completion
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/Azure/azure-cli/dev/az.completion
+            dest: "/home/{{ current_user }}/.config/az/az.completion"
+
+# TODO rename when gh is working
+        - name: install az completion
+          ansible.builtin.lineinfile:
+            path: "/home/{{ current_user }}/.zshrc"
+            line: 'autoload -U +X bashcompinit && bashcompinit && compinit'
+            insertafter: EOF
+
+        - name: install az completion
+          ansible.builtin.lineinfile:
+            path: "/home/{{ current_user }}/.zshrc"
+            line: 'source .config/az/az.completion'
+            insertafter: EOF
+
+# install gh
     - name: gh
       block:
         - name: github pgpkey
@@ -86,6 +114,17 @@
           apt: 
             name: gh
             update_cache: yes
+
+        - name: Install gh autocompletion
+          command: "sudo bash -c 'gh completion -s zsh > /usr/local/share/zsh/site-functions/_gh'"
+          args:
+            creates: /usr/local/share/zsh/site-functions/_gh
+
+        - name: gh autocomplete
+          ansible.builtin.lineinfile:
+            path: "/home/{{ current_user }}/.zshrc"
+            line: 'compinit -i'
+            insertafter: EOF
 
 # install .net 6
     - name: Download .NET6 debian package
@@ -149,8 +188,6 @@
         chdir: "{{ download_dir }}"
         creates: /usr/local/bin/azd
 
-# azcli autocompletion
-# gh autocompletion
-# devcli autocompletion
+# verify kubectl autocompletion
 # dotnet autocompletion
-
+# devcli autocompletion
