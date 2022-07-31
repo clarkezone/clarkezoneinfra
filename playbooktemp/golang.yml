@@ -141,6 +141,20 @@
         name: dotnet-sdk-6.0
         update_cache: yes
 
+    - name: dotnet autocomplete
+      ansible.builtin.blockinfile:
+       path: "/home/{{ current_user }}/.zshrc"
+       block: |
+        _dotnet_zsh_complete()
+        {
+          local completions=("$(dotnet complete "$words")")
+        
+          reply=( "${(ps:\n:)completions}" )
+        }
+
+        compctl -K _dotnet_zsh_complete dotnet
+
+# code server
     - name: Download code server
       get_url:
         url: https://code-server.dev/install.sh
@@ -188,6 +202,28 @@
         chdir: "{{ download_dir }}"
         creates: /usr/local/bin/azd
 
+# install kubectl
+    - name: kubectl
+      block:
+        - name: kubectl pgpkey
+          ansible.builtin.get_url:
+            url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+            dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+        - name: kubectl repo
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+            state: present
+
+        - name: Install kubectl
+          apt: 
+            name: kubectl
+            update_cache: yes
+
+        - name: Ensure kubectl autocomplete
+          ansible.builtin.lineinfile:
+            path: "/home/{{ current_user }}/.zshrc"
+            line: 'source <(kubectl completion zsh)'
+            insertafter: EOF
+
 # verify kubectl autocompletion
-# dotnet autocompletion
-# devcli autocompletion
