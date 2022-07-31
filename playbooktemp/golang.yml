@@ -223,4 +223,8 @@
             line: 'source <(kubectl completion zsh)'
             insertafter: EOF
 
-# verify kubectl autocompletion
+# merge other public stuff over
+# Look at kind vs minikube for azure thing
+# ensure compose with private
+# verify build of previewd
+# eliminiate current_user?
