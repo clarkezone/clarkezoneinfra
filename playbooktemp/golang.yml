@@ -21,6 +21,14 @@
     - name: Install required system packages
       apt: name={{ sys_packages }} state=latest
 
+    - name: compinit for bash and zsh completion
+      ansible.builtin.blockinfile:
+       path: "/home/{{ current_user }}/.zshrc"
+       block: |
+        autoload -Uz compinit bashcompinit
+        compinit
+        bashcompinit
+
     # kill this on merge
     - name: Zsh-ohmyzsh
       include_role:
@@ -88,12 +96,6 @@
         - name: install az completion
           ansible.builtin.lineinfile:
             path: "/home/{{ current_user }}/.zshrc"
-            line: 'autoload -U +X bashcompinit && bashcompinit && compinit'
-            insertafter: EOF
-
-        - name: install az completion
-          ansible.builtin.lineinfile:
-            path: "/home/{{ current_user }}/.zshrc"
             line: 'source .config/az/az.completion'
             insertafter: EOF
 
@@ -119,12 +121,6 @@
           command: "sudo bash -c 'gh completion -s zsh > /usr/local/share/zsh/site-functions/_gh'"
           args:
             creates: /usr/local/share/zsh/site-functions/_gh
-
-        - name: gh autocomplete
-          ansible.builtin.lineinfile:
-            path: "/home/{{ current_user }}/.zshrc"
-            line: 'compinit -i'
-            insertafter: EOF
 
 # install .net 6
     - name: Download .NET6 debian package
@@ -190,6 +186,7 @@
         enabled: yes
         state: started
 
+# install az dev cli
     - name: Download azure dev cli
       get_url:
         url: https://aka.ms/install-azd.sh
