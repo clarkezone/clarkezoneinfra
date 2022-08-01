@@ -57,7 +57,7 @@
 #  import_playbook: vim.yml
   # TODO make this conditional based on a tag:
   import_playbook: code-server.yml
-  import_playbook: azcli.yml
+  import_playbook: azdevcli.yml
 
 # merge other public stuff over
 # Look at kind vs minikube for azure thing
