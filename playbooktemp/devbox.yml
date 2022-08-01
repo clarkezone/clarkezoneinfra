@@ -1,0 +1,65 @@
+# Ensure this cmd is run from within the playbook dir:
+#  ansible-playbook -i ../devbox.ini -u james devbox.yml -K 
+# TODO: how to store become password in vault?
+---
+- hosts: all
+
+  vars_files:
+  - ../vars/devboxtemp.yml
+
+  vars:
+   # not included: 'qemu-system', 'qemu-user-static',
+   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'podman', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools']
+
+  tasks:
+  # Install Packages
+    - name: Update apt-get repo and cache
+      become: true
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: Upgrade all apt packages
+      become: true
+      apt: upgrade=dist force_apt_get=yes
+
+    - name: Install required system packages
+      become: true
+      apt: name={{ sys_packages }} state=latest
+
+  # enable completion for bash and zsh styles
+    - name: compinit for bash and zsh completion
+      ansible.builtin.blockinfile:
+       path: "{{ ansible_user_dir }}/.zshrc"
+       block: |
+        autoload -Uz compinit bashcompinit
+        compinit
+        bashcompinit
+
+    # Zsh
+    - name: Zsh-ohmyzsh
+      include_role:
+        name: gantsign.oh-my-zsh
+      vars:
+        ansible_become: yes
+        users:
+          - username: "{{ ansible_user_id }}" #TODO can this be removed and use user instead in substitutions?
+            oh_my_zsh:
+              theme: awesomepanda
+              plugins:
+                - git
+
+- name: Devbox components
+  import_playbook: azcli.yml
+  import_playbook: gh.yml
+  import_playbook: dotnet6.yml
+  import_playbook: kubectl.yml
+  import_playbook: golang.yml
+  import_playbook: cloudflared.yml
+#  import_playbook: vim.yml
+  # TODO make this conditional based on a tag:
+  import_playbook: code-server.yml
+  import_playbook: azcli.yml
+
+# merge other public stuff over
+# Look at kind vs minikube for azure thing
+# ensure compose with private
+# verify build of previewd

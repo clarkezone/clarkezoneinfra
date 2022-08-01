@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:
+# install kubectl
+    - name: kubectl
+      block:
+        - name: kubectl pgpkey
+          ansible.builtin.get_url:
+            url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+            dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+        - name: kubectl repo
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+            state: present
+
+        - name: Install kubectl
+          become: true
+          apt: 
+            name: kubectl
+            update_cache: yes
+
+        - name: Ensure kubectl autocomplete
+          ansible.builtin.lineinfile:
+            path: "{{ ansible_user_dir }}/.zshrc"
+            line: 'source <(kubectl completion zsh)'
+            insertafter: EOF

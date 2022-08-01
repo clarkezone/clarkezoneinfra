@@ -1,0 +1,40 @@
+---
+- hosts: all
+# install code-server
+  tasks:
+    - name: Download code server
+      become: true
+      get_url:
+        url: https://code-server.dev/install.sh
+        dest: "{{ download_dir }}/code-server-install.sh"
+        mode: 0755
+
+    - name: Run setup
+      become: true
+      command: /tmp/code-server-install.sh
+      args:
+        chdir: "{{ download_dir }}"
+        creates: /usr/bin/code-server
+
+    - name: codeserver configdir
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/.config/code-server"
+        state: directory
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
+        mode: '0700'
+
+    - name: Copy code-server config
+      copy:
+        src: "{{ playbook_dir }}/files/dotfiles/.config/code-server/config.yaml"
+        dest: "{{ ansible_user_dir }}/.config/code-server/config.yaml"
+        backup: no
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
+        mode: 0755
+
+    - name: Start code-server service
+      service: 
+        name: code-server@james.service
+        enabled: yes
+        state: started

@@ -1,0 +1,42 @@
+---
+- hosts: all
+  tasks:
+# AZCli
+    - name: AzCli
+      block:
+        - name: microsoft pgpkey
+          become: true
+          ansible.builtin.get_url:
+            url: https://packages.microsoft.com/keys/microsoft.asc
+            dest: /etc/apt/trusted.gpg.d/microsoft.asc
+
+        - name: azcli repo
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/microsoft.asc] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
+            state: present
+
+        - name: Install azcli
+          become: true
+          apt: 
+            name: azure-cli
+            update_cache: yes
+
+        - name: az config dir
+          ansible.builtin.file:
+            path: "/home/{{ ansible_user_id }}/.config/az"
+            state: directory
+            group: "{{ ansible_user_id }}"
+            owner: "{{ ansible_user_id }}"
+            mode: '0700'
+
+        - name: Download az completion
+          become: true
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/Azure/azure-cli/dev/az.completion
+            dest: "{{ ansible_user_dir }}/.config/az/az.completion"
+
+        - name: install az completion
+          ansible.builtin.lineinfile:
+            path: "{{ ansible_user_dir }}/.zshrc"
+            line: 'source .config/az/az.completion'
+            insertafter: EOF
