@@ -116,7 +116,6 @@
 - name: Devbox components
   import_playbook: checkreboot.yml
 
-# merge other public stuff over
 # Look at kind vs minikube for azure thing
 # ensure compose with private
 # verify build of previewd
