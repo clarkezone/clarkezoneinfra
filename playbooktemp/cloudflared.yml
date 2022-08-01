@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+# install cloudflared
+  tasks:
+    - name: Cloudflared
+      block:
+
+        # https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+        - name: Download cloudflared
+          get_url:
+            url: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+            dest: "/usr/local/bin/cloudflared"
+            mode: 0755
+
+# Something wrong with Cloudflares package handling
+              #        - name: cloudflared pgpkey
+              #          ansible.builtin.get_url:
+              #            url: https://pkg.cloudflare.com/cloudflare-main.gpg
+              #            dest: /usr/share/keyrings/cloudflare-main.gpg
+              #
+              #        - name: cloudflared package
+              #          ansible.builtin.apt_repository:
+              #            repo: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/ focal main"
+              #            state: present
+              #
+              #        - name: install cloudflared
+              #          apt: 
+              #            name: cloudflared
+              #            update_cache: yes
