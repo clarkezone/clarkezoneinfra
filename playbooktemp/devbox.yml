@@ -47,6 +47,35 @@
               plugins:
                 - git
 
+  # Install pip3 local package support
+    - name: pip3 local binary resolution eg for ansible
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'export PATH=$PATH:$HOME/.local/bin'
+        insertafter: EOF
+
+  # Install Ansible
+    - name: install ansible with pip3
+      ansible.builtin.command: pip3 install ansible --user
+      changed_when: false
+      register: ans_output
+      failed_when: ans_output.rc != 0
+
+    - name: Copy TMUX config
+      copy:
+        src: "{{ playbook_dir }}/files/dotfiles/.tmux.conf"
+        dest: "{{ ansible_user_dir }}/.tmux.conf"
+        backup: no
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
+        mode: 0700
+
+    - name: SSHagent
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'eval $(ssh-agent -s)'
+        insertafter: EOF
+
 - name: Devbox components
   import_playbook: azcli.yml
   import_playbook: gh.yml
@@ -58,6 +87,8 @@
   # TODO make this conditional based on a tag:
   import_playbook: code-server.yml
   import_playbook: azdevcli.yml
+  import_playbook: misc.yml
+  import_playbook: checkreboot.yml
 
 # merge other public stuff over
 # Look at kind vs minikube for azure thing

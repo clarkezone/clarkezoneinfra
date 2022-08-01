@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+    - name: install passlib
+      ansible.builtin.command: pip3 install passlib --user
+      changed_when: false
+      register: ans_output
+      failed_when: ans_output.rc != 0
+
+    - name: mosh
+      include_role:
+        name: andrewrothstein.mosh
+
+    - name: k9s
+      include_role:
+        name: andrewrothstein.k9s
+
+    - name: yq
+      include_role:
+        name: andrewrothstein.yq
+
+    - name: jq
+      include_role:
+        name: andrewrothstein.jq

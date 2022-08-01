@@ -3,7 +3,6 @@
 # install VIM and customizations
   tasks:
   # Install VIM and plugins
-  # TODO revert the one i forked
     - name: Copy VIM rc
       copy:
         src: "{{ playbook_dir }}/files/dotfiles/.vimrc"
@@ -13,7 +12,6 @@
         owner: "{{ ansible_user_id }}"
         mode: 0700
 
-#TODO pull over these files
     - name: Copy VIM colorscheme
       copy:
         src: "{{ playbook_dir }}/files/vim/"

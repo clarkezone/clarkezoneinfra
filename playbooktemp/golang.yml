@@ -20,3 +20,15 @@
         path: "{{ ansible_user_dir }}/.zshrc"
         line: 'export PATH=$PATH:$HOME/go/bin'
         insertafter: EOF
+
+    - name: golang install commands
+      ansible.builtin.command: "{{ ansible_local.golang.general.home }}/bin/go install {{ item }}"
+      changed_when: false
+      register: ans_output
+      failed_when: ans_output.rc != 0
+      with_items: 
+       - "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
+       - "github.com/uw-labs/strongbox@v1.0.0"
+       - "sigs.k8s.io/kind@latest"
+       - "github.com/homeport/dyff/cmd/dyff@latest"
+         #       - "github.com/goreleaser/goreleaser@latest"

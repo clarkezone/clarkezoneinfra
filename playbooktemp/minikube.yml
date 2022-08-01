@@ -1,0 +1,49 @@
+---
+- hosts: all
+  tasks:
+  # Fix cgroups for kind on podman
+    - name: fix cgroups
+      copy:
+        src: "{{ playbook_dir }}/files/fixcgroup/delegate.conf"
+        dest: "/etc/systemd/system/user@.service.d/"
+        backup: no
+        mode: 0700
+      vars:
+        ansible_become: yes
+
+    - name: fix cgroups part 2
+      copy:
+        src: "{{ playbook_dir }}/files/fixcgroup/iptables.conf"
+        dest: "/etc/modules-load.d/"
+        backup: no
+        mode: 0700
+      vars:
+        ansible_become: yes
+
+    - name: Restart systemclt
+      ansible.builtin.command: systemctl daemon-reload
+      changed_when: false
+      register: ans_output
+      failed_when: ans_output.rc != 0
+      vars:
+        ansible_become: yes
+
+    - name: enable sudoers for padman for minikube
+      ansible.builtin.lineinfile:
+        path: "/etc/sudoers"
+        line: 'james ALL=(ALL) NOPASSWD: /usr/bin/podman'
+        insertafter: EOF
+      vars:
+        ansible_become: yes
+
+    - name: minikube
+      include_role:
+        name: gantsign.minikube
+      vars:
+        ansible_become: yes
+
+    - name: minikube autocomplete
+      ansible.builtin.lineinfile:
+        path: "/home/{{ current_user }}/.zshrc"
+        line: 'source <(minikube completion zsh)'
+        insertafter: EOF
