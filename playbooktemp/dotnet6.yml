@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
   tasks:
 # install .net 6
     - name: Download .NET6 debian package

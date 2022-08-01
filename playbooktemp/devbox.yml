@@ -84,16 +84,36 @@
 
 - name: Devbox components
   import_playbook: azcli.yml
+
+- name: Devbox components
   import_playbook: gh.yml
+
+- name: Devbox components
   import_playbook: dotnet6.yml
+
+- name: Devbox components
   import_playbook: kubectl.yml
+
+- name: Devbox components
   import_playbook: golang.yml
+
+- name: Devbox components
   import_playbook: cloudflared.yml
+
+- name: Devbox components
   import_playbook: vim.yml
+
   # TODO make this conditional based on a tag:
+- name: Devbox components
   import_playbook: code-server.yml
+
+- name: Devbox components
   import_playbook: azdevcli.yml
+
+- name: Devbox components
   import_playbook: misc.yml
+
+- name: Devbox components
   import_playbook: checkreboot.yml
 
 # merge other public stuff over

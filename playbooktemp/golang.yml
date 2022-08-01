@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
   tasks:
     - name: Download and Expand Go
       become: true
@@ -18,11 +20,12 @@
     - name: Ensure golang local binaries in path
       ansible.builtin.lineinfile:
         path: "{{ ansible_user_dir }}/.zshrc"
-        line: 'export PATH=$PATH:$HOME/go/bin'
+        line: 'export PATH=${{ golang_dir }}/bin:PATH:$HOME/go/bin'
         insertafter: EOF
 
     - name: golang install commands
-      ansible.builtin.command: "{{ ansible_local.golang.general.home }}/bin/go install {{ item }}"
+      become: true
+      ansible.builtin.command: "/usr/local/go/bin/go install {{ item }}"
       changed_when: false
       register: ans_output
       failed_when: ans_output.rc != 0
@@ -31,4 +34,6 @@
        - "github.com/uw-labs/strongbox@v1.0.0"
        - "sigs.k8s.io/kind@latest"
        - "github.com/homeport/dyff/cmd/dyff@latest"
+       - "github.com/spf13/cobra-cli@latest"
+       - "github.com/client9/misspell/cmd/misspell@latest"
          #       - "github.com/goreleaser/goreleaser@latest"

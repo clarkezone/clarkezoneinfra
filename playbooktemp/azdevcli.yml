@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
   tasks:
 # install az dev cli
     - name: Download azure dev cli
