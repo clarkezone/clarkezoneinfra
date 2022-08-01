@@ -2,7 +2,6 @@
 # TODO: how to store become password in vault?
 ---
 - hosts: all
-  become: true
 
   vars_files:
   - ../vars/devboxtemp.yml
@@ -16,7 +15,7 @@
 
     - name: compinit for bash and zsh completion
       ansible.builtin.blockinfile:
-       path: "/home/{{ current_user }}/.zshrc"
+       path: "{{ ansible_user_dir }}/.zshrc"
        block: |
         autoload -Uz compinit bashcompinit
         compinit
@@ -29,13 +28,14 @@
       vars:
         ansible_become: yes
         users:
-          - username: "{{ current_user }}" #TODO can this be removed and use user instead in substitutions?
+          - username: "{{ ansible_user_id }}" #TODO can this be removed and use user instead in substitutions?
             oh_my_zsh:
               theme: awesomepanda
               plugins:
                 - git
 
     - name: Download and Expand Go
+      become: true
       unarchive:
         remote_src: yes
         src: "https://go.dev/dl/go1.18.4.linux-amd64.tar.gz"
@@ -44,13 +44,13 @@
 
     - name: Ensure golang in path
       ansible.builtin.lineinfile:
-        path: "/home/{{ current_user }}/.zshrc"
+        path: "{{ ansible_user_dir }}/.zshrc"
         line: 'export PATH={{ golang_dir }}/bin:$PATH'
         insertafter: EOF
 
     - name: Ensure golang local binaries in path
       ansible.builtin.lineinfile:
-        path: "/home/{{ current_user }}/.zshrc"
+        path: "{{ ansible_user_dir }}/.zshrc"
         line: 'export PATH=$PATH:$HOME/go/bin'
         insertafter: EOF
 
@@ -58,6 +58,7 @@
     - name: AzCli
       block:
         - name: microsoft pgpkey
+          become: true
           ansible.builtin.get_url:
             url: https://packages.microsoft.com/keys/microsoft.asc
             dest: /etc/apt/trusted.gpg.d/microsoft.asc
@@ -68,27 +69,29 @@
             state: present
 
         - name: Install azcli
+          become: true
           apt: 
             name: azure-cli
             update_cache: yes
 
         - name: az config dir
           ansible.builtin.file:
-            path: "/home/{{ current_user }}/.config/az"
+            path: "/home/{{ ansible_user_id }}/.config/az"
             state: directory
-            group: "{{ current_user }}"
-            owner: "{{ current_user }}"
+            group: "{{ ansible_user_id }}"
+            owner: "{{ ansible_user_id }}"
             mode: '0700'
 
         - name: Download az completion
+          become: true
           ansible.builtin.get_url:
             url: https://raw.githubusercontent.com/Azure/azure-cli/dev/az.completion
-            dest: "/home/{{ current_user }}/.config/az/az.completion"
+            dest: "{{ ansible_user_dir }}/.config/az/az.completion"
 
 # TODO rename when gh is working
         - name: install az completion
           ansible.builtin.lineinfile:
-            path: "/home/{{ current_user }}/.zshrc"
+            path: "{{ ansible_user_dir }}/.zshrc"
             line: 'source .config/az/az.completion'
             insertafter: EOF
 
@@ -106,6 +109,7 @@
             state: present
 
         - name: Install gh
+          become: true
           apt: 
             name: gh
             update_cache: yes
@@ -117,6 +121,7 @@
 
 # install .net 6
     - name: Download .NET6 debian package
+      become: true
       get_url:
         url: "https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb"
         dest: "{{ download_dir }}"
@@ -126,13 +131,14 @@
         deb: "{{ download_dir }}/packages-microsoft-prod.deb"
 
     - name: Install dotnet6 sdk
+      become: true
       apt: 
         name: dotnet-sdk-6.0
         update_cache: yes
 
     - name: dotnet autocomplete
       ansible.builtin.blockinfile:
-       path: "/home/{{ current_user }}/.zshrc"
+       path: "{{ ansible_user_dir }}/.zshrc"
        block: |
         _dotnet_zsh_complete()
         {
@@ -145,12 +151,14 @@
 
 # code server
     - name: Download code server
+      become: true
       get_url:
         url: https://code-server.dev/install.sh
         dest: "{{ download_dir }}/code-server-install.sh"
         mode: 0755
 
     - name: Run setup
+      become: true
       command: /tmp/code-server-install.sh
       args:
         chdir: "{{ download_dir }}"
@@ -158,19 +166,19 @@
 
     - name: codeserver configdir
       ansible.builtin.file:
-        path: "/home/{{ current_user }}/.config/code-server"
+        path: "{{ ansible_user_dir }}/.config/code-server"
         state: directory
-        group: "{{ current_user }}"
-        owner: "{{ current_user }}"
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
         mode: '0700'
 
     - name: Copy code-server config
       copy:
         src: "{{ playbook_dir }}/files/dotfiles/.config/code-server/config.yaml"
-        dest: "/home/{{ current_user }}/.config/code-server/config.yaml"
+        dest: "{{ ansible_user_dir }}/.config/code-server/config.yaml"
         backup: no
-        group: "{{ current_user }}"
-        owner: "{{ current_user }}"
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
         mode: 0755
 
     - name: Start code-server service
@@ -206,13 +214,14 @@
             state: present
 
         - name: Install kubectl
+          become: true
           apt: 
             name: kubectl
             update_cache: yes
 
         - name: Ensure kubectl autocomplete
           ansible.builtin.lineinfile:
-            path: "/home/{{ current_user }}/.zshrc"
+            path: "{{ ansible_user_dir }}/.zshrc"
             line: 'source <(kubectl completion zsh)'
             insertafter: EOF
 
@@ -223,4 +232,3 @@
 # Look at kind vs minikube for azure thing
 # ensure compose with private
 # verify build of previewd
-# eliminiate current_user?
