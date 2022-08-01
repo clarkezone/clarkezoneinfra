@@ -54,7 +54,7 @@
   import_playbook: kubectl.yml
   import_playbook: golang.yml
   import_playbook: cloudflared.yml
-#  import_playbook: vim.yml
+  import_playbook: vim.yml
   # TODO make this conditional based on a tag:
   import_playbook: code-server.yml
   import_playbook: azdevcli.yml

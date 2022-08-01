@@ -1,0 +1,75 @@
+---
+- hosts: all
+# install VIM and customizations
+  tasks:
+  # Install VIM and plugins
+  # TODO revert the one i forked
+    - name: Copy VIM rc
+      copy:
+        src: "{{ playbook_dir }}/files/dotfiles/.vimrc"
+        dest: "{{ ansible_user_dir }}"
+        backup: no
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
+        mode: 0700
+
+#TODO pull over these files
+    - name: Copy VIM colorscheme
+      copy:
+        src: "{{ playbook_dir }}/files/vim/"
+        dest: "{{ ansible_user_dir }}/.vim/"
+        backup: no
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
+        mode: 0700
+
+    - name: Install win-vim
+      ansible.builtin.git:
+        repo: 'https://github.com/dstein64/vim-win'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/vim-win"
+
+    - name: Nerdtree
+      ansible.builtin.git:
+        repo: 'https://github.com/preservim/nerdtree.git'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/nerdtree"
+
+    - name: VimWakatime
+      ansible.builtin.git:
+        repo: 'https://github.com/wakatime/vim-wakatime'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/vim-wakatime"
+
+    - name: Vimairline
+      ansible.builtin.git:
+        repo: 'https://github.com/vim-airline/vim-airline'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/vim-airline"
+
+    - name: vim-go
+      ansible.builtin.git:
+        repo: 'https://github.com/fatih/vim-go.git'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/vim-go"
+
+    - name: vim-gitgutter
+      ansible.builtin.git:
+        repo: 'https://github.com/airblade/vim-gitgutter'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/vim-gitgutter"
+          #git clone https://github.com/airblade/vim-gitgutter ~/.vim/pack/plugins/start/gitgutter
+
+    - name: vim ctrl-p
+      ansible.builtin.git:
+        repo: 'https://github.com/ctrlpvim/ctrlp.vim.git'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/ctrlp"
+
+    - name: vim syntastic
+      ansible.builtin.git:
+        repo: 'https://github.com/vim-syntastic/syntastic.git'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/syntastic"
+
+    - name: vim fugitive
+      ansible.builtin.git:
+        repo: 'https://tpope.io/vim/fugitive.git'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/fugitive"
+
+    - name: vim floatterm
+      ansible.builtin.git:
+        repo: 'https://github.com/voldikss/vim-floaterm'
+        dest: "{{ ansible_user_dir }}/.vim/pack/plugins/start/floatterm"
