@@ -11,13 +11,6 @@
    sys_packages: [ 'build-essential', 'manpages-dev', ]
 
   tasks:
-# TODO: is there a generic build-essential?
-#    - name: Install buildtools
-#      ansible.builtin.package:
-#        name:
-#          - build-esential
-#        state: latest
-
     - name: Install required system packages
       apt: name={{ sys_packages }} state=latest
 
@@ -222,6 +215,9 @@
             path: "/home/{{ current_user }}/.zshrc"
             line: 'source <(kubectl completion zsh)'
             insertafter: EOF
+
+- name: more
+  import_playbook: cloudflared.yml
 
 # merge other public stuff over
 # Look at kind vs minikube for azure thing
