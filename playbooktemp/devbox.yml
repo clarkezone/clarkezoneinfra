@@ -76,6 +76,12 @@
         line: 'eval $(ssh-agent -s)'
         insertafter: EOF
 
+    - name: Install podman completion
+      become: true
+      command: "sudo bash -c 'podman completion -f /usr/local/share/zsh/site-functions/_podman zsh'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_podman
+
 - name: Devbox components
   import_playbook: azcli.yml
   import_playbook: gh.yml
