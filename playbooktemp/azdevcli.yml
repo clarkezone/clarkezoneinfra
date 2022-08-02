@@ -5,12 +5,14 @@
   tasks:
 # install az dev cli
     - name: Download azure dev cli
+      become: true
       get_url:
         url: https://aka.ms/install-azd.sh
         dest: "{{ download_dir }}/install-azd.sh"
         mode: 0754
 
     - name: Run setup for azd
+      become: true
       command: /tmp/install-azd.sh
       args:
         chdir: "{{ download_dir }}"
