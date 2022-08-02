@@ -11,8 +11,8 @@
             dest: /etc/apt/trusted.gpg.d/microsoft.asc
 
         - name: azcli repo
+          become: true
           ansible.builtin.apt_repository:
-            become: true
             repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/microsoft.asc] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
             state: present
 
@@ -24,7 +24,6 @@
 
         - name: az config dir
           ansible.builtin.file:
-          become: true
             path: "/home/{{ ansible_user_id }}/.config/az"
             state: directory
             group: "{{ ansible_user_id }}"
@@ -32,7 +31,6 @@
             mode: '0700'
 
         - name: Download az completion
-          become: true
           ansible.builtin.get_url:
             url: https://raw.githubusercontent.com/Azure/azure-cli/dev/az.completion
             dest: "{{ ansible_user_dir }}/.config/az/az.completion"
