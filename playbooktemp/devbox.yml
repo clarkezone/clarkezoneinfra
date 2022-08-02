@@ -25,15 +25,6 @@
       become: true
       apt: name={{ sys_packages }} state=latest
 
-  # enable completion for bash and zsh styles
-    - name: compinit for bash and zsh completion
-      ansible.builtin.blockinfile:
-       path: "{{ ansible_user_dir }}/.zshrc"
-       block: |
-        autoload -Uz compinit bashcompinit
-        compinit
-        bashcompinit
-
     # Zsh
     - name: Zsh-ohmyzsh
       include_role:
@@ -47,6 +38,14 @@
               plugins:
                 - git
 
+  # enable completion for bash and zsh styles
+    - name: compinit for bash and zsh completion
+      ansible.builtin.blockinfile:
+       path: "{{ ansible_user_dir }}/.zshrc"
+       block: |
+        autoload -Uz compinit bashcompinit
+        compinit
+        bashcompinit
   # Install pip3 local package support
     - name: pip3 local binary resolution eg for ansible
       ansible.builtin.lineinfile:
