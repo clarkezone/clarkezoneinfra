@@ -9,7 +9,7 @@
 
   vars:
    # not included: 'qemu-system', 'qemu-user-static',
-   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'podman', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools', 'shellcheck']
+   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'podman', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools', 'shellcheck', 'qemu-system', 'qemu-user-static']
 
   tasks:
   # Install Packages
