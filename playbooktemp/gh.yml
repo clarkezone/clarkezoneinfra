@@ -5,11 +5,13 @@
     - name: gh
       block:
         - name: github pgpkey
+          become: true
           ansible.builtin.get_url:
             url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
             dest: /etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
 
         - name: gh repo
+          become: true
           ansible.builtin.apt_repository:
             repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
             state: present
