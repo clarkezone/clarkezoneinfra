@@ -11,6 +11,7 @@
         dest: "{{ download_dir }}"
 
     - name: Install a .deb package from the internet
+      become: true
       ansible.builtin.apt:
         deb: "{{ download_dir }}/packages-microsoft-prod.deb"
 
