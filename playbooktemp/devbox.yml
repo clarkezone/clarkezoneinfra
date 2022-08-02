@@ -9,7 +9,7 @@
 
   vars:
    # not included: 'qemu-system', 'qemu-user-static',
-   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'podman', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools']
+   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'podman', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools', 'spellcheck']
 
   tasks:
   # Install Packages
@@ -60,6 +60,13 @@
       changed_when: false
       register: ans_output
       failed_when: ans_output.rc != 0
+
+  # Install precommit
+    - name: install pre-commit
+      ansible.builtin.command: pip3 install pre-commit --user
+      changed_when: false
+      register: precm_output
+      failed_when: precm_output.rc != 0
 
     - name: Copy TMUX config
       copy:
