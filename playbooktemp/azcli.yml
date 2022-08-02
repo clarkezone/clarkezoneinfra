@@ -12,6 +12,7 @@
 
         - name: azcli repo
           ansible.builtin.apt_repository:
+            become: true
             repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/microsoft.asc] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
             state: present
 
