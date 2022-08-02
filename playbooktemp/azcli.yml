@@ -24,6 +24,7 @@
 
         - name: az config dir
           ansible.builtin.file:
+          become: true
             path: "/home/{{ ansible_user_id }}/.config/az"
             state: directory
             group: "{{ ansible_user_id }}"
