@@ -20,7 +20,7 @@
     - name: Ensure golang local binaries in path
       ansible.builtin.lineinfile:
         path: "{{ ansible_user_dir }}/.zshrc"
-        line: 'export PATH=${{ golang_dir }}/bin:PATH:$HOME/go/bin'
+        line: 'export PATH=$PATH:$HOME/go/bin'
         insertafter: EOF
 
     - name: golang install commands
