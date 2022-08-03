@@ -36,4 +36,5 @@
        - "github.com/homeport/dyff/cmd/dyff@latest"
        - "github.com/spf13/cobra-cli@latest"
        - "github.com/client9/misspell/cmd/misspell@latest"
+       - "sigs.k8s.io/kind@v0.14.0"
          #       - "github.com/goreleaser/goreleaser@latest"
