@@ -29,3 +29,10 @@
           - docker-ce-cli
           - containerd.io
           - docker-compose-plugin
+
+    - name: Docker usergroup
+      ansible.builtin.user:
+        name: {{ remote_user }}
+        group: {{ docker_group }}
+        append: yes
+
