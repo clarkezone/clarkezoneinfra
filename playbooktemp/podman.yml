@@ -12,7 +12,9 @@
       become: true
       ansible.builtin.get_url:
         url: "https://github.com/containers/gvisor-tap-vsock/releases/download/v0.4.0/gvproxy-linux"
+
         dest: "/usr/libexec/podman/gvproxy"
+        mode: '0755'
     - name: Install podman completion
       become: true
       command: "sudo bash -c 'podman completion -f /usr/local/share/zsh/site-functions/_podman zsh'"
