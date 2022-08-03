@@ -31,9 +31,9 @@
           - docker-compose-plugin
 
     - name: Docker usergroup
+      become: true
       ansible.builtin.user:
         name: "{{ ansible_user }}"
-        become: true
         group: "docker"
         append: yes
 
