@@ -32,7 +32,7 @@
 
     - name: Docker usergroup
       ansible.builtin.user:
-        name: "{{ remote_user }}"
+        name: "{{ ansible_user }}"
         group: "{{ docker_group }}"
         append: yes
 
