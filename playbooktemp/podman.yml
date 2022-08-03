@@ -18,10 +18,10 @@
 
   # https://stackoverflow.com/questions/72092497/podman-machine-start-on-ubuntu
     - name: copy gvproxy
-      become: true:
-        ansible.builtin.copy:
-          src: "{{ local_dir }}/gvproxy-linux"
-          dest: "/usr/libexec/podman/gvproxy"
+      become: true
+      ansible.builtin.copy:
+        src: "{{ local_dir }}/gvproxy-linux"
+        dest: "/usr/libexec/podman/gvproxy"
     - name: Install podman completion
       become: true
       command: "sudo bash -c 'podman completion -f /usr/local/share/zsh/site-functions/_podman zsh'"
