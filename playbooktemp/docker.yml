@@ -33,6 +33,7 @@
     - name: Docker usergroup
       ansible.builtin.user:
         name: "{{ ansible_user }}"
+        become: true
         group: "docker"
         append: yes
 
