@@ -1,0 +1,32 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+  vars:
+   docker_packages: [ 'qemu-system', 'qemu-user-static']
+  tasks:
+    - name: Install docker dependencies
+      become: true
+      apt: name={{ docker_packages }} state=latest
+
+    - name: github pgpkey
+      become: true
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.gpg
+
+    - name: docker repo
+      become: true
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable"
+        state: present
+
+    - name: Install docker
+      become: true
+      apt: 
+        update_cache: yes
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin

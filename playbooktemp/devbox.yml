@@ -9,7 +9,7 @@
 
   vars:
    # not included: 'qemu-system', 'qemu-user-static',
-   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'podman', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools', 'shellcheck', 'qemu-system', 'qemu-user-static']
+   sys_packages: [ 'curl', 'vim', 'git', 'nfs-common', 'tmux', 'build-essential', 'manpages-dev',  'python3-pip', 'mc', 'net-tools', 'shellcheck' ]
 
   tasks:
   # Install Packages
@@ -81,12 +81,6 @@
         path: "{{ ansible_user_dir }}/.zshrc"
         line: 'eval $(ssh-agent -s)'
         insertafter: EOF
-
-    - name: Install podman completion
-      become: true
-      command: "sudo bash -c 'podman completion -f /usr/local/share/zsh/site-functions/_podman zsh'"
-      args:
-        creates: /usr/local/share/zsh/site-functions/_podman
 
 - name: Devbox components
   import_playbook: azcli.yml

@@ -1,0 +1,29 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+  vars:
+   podman_packages: [ 'podman', 'qemu-system', 'qemu-user-static']
+  tasks:
+    - name: Install podman and friends
+      become: true
+      apt: name={{ podman_packages }} state=latest
+    - name: Download
+      become: true
+      unarchive:
+        remote_src: yes
+        src: "https://github.com/containers/gvisor-tap-vsock/releases/download/v0.4.0/gvproxy-linux"
+        dest: "{{ local_dir }}"
+        creates: "{{ local_dir }}/gvproxy-linux"
+
+  # https://stackoverflow.com/questions/72092497/podman-machine-start-on-ubuntu
+    - name: copy gvproxy
+      become: true:
+        ansible.builtin.copy:
+          src: "{{ local_dir }}/gvproxy-linux"
+          dest: "/usr/libexec/podman/gvproxy"
+    - name: Install podman completion
+      become: true
+      command: "sudo bash -c 'podman completion -f /usr/local/share/zsh/site-functions/_podman zsh'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_podman
