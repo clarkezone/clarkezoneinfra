@@ -9,11 +9,10 @@
       become: true
       apt: name={{ docker_packages }} state=latest
 
-    - name: github pgpkey
+    - name: docker pgpkey
       become: true
-      ansible.builtin.get_url:
+      ansible.builtin.apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
-        dest: /etc/apt/keyrings/docker.gpg
 
     - name: docker repo
       become: true
