@@ -11,7 +11,7 @@
     - name: Download
       become: true
       ansible.builtin.get_url:
-        src: "https://github.com/containers/gvisor-tap-vsock/releases/download/v0.4.0/gvproxy-linux"
+        url: "https://github.com/containers/gvisor-tap-vsock/releases/download/v0.4.0/gvproxy-linux"
         dest: "/usr/libexec/podman/gvproxy"
     - name: Install podman completion
       become: true
