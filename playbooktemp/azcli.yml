@@ -38,5 +38,5 @@
         - name: install az completion
           ansible.builtin.lineinfile:
             path: "{{ ansible_user_dir }}/.zshrc"
-            line: 'source .config/az/az.completion'
+            line: 'source ~/.config/az/az.completion'
             insertafter: EOF
