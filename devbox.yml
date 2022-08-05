@@ -110,6 +110,12 @@
 - name: azdevcli
   import_playbook: playbooktemp/azdevcli.yml
 
+- name: podman
+  import_playbook: playbooktemp/podman.yml
+
+- name: docker
+  import_playbook: playbooktemp/docker.yml
+
 - name: helm
   import_playbook: playbooktemp/helm.yml
 
