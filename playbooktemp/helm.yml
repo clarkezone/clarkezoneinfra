@@ -1,0 +1,25 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+# install helm
+  tasks:
+    - name: Download helm install script
+      become: true
+      get_url:
+        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        dest: "{{ download_dir }}/get-helm.sh"
+        mode: 0755
+
+    - name: Run helm setup
+      become: true
+      command: /tmp/get-helm.sh
+      args:
+        chdir: "{{ download_dir }}"
+        creates: /usr/local/bin/helm
+
+    - name: Install helm completion
+      become: true
+      command: "sudo bash -c 'helm completion zsh > /usr/local/share/zsh/site-functions/_helm zsh'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_helm
