@@ -1,0 +1,16 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+  tasks:
+    - name: Download kind
+      become: true
+      ansible.builtin.get_url:
+        url: "https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64"
+        dest: "/usr/local/bin/kind"
+        mode: '0755'
+    - name: Install kind completion
+      become: true
+      command: "sudo bash -c 'kind completion zsh > /usr/local/share/zsh/site-functions/_kind zsh'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_kind
