@@ -1,11 +1,11 @@
 # Ensure this cmd is run from within the playbook dir:
 #  ansible-playbook -i ../devbox.ini -u james devbox.yml -K 
 # TODO: how to store become password in vault?
----
+
 - hosts: all
 
   vars_files:
-  - ../vars/devboxtemp.yml
+  - vars/devboxtemp.yml
 
   vars:
    # not included: 'qemu-system', 'qemu-user-static',
@@ -82,39 +82,45 @@
         line: 'eval $(ssh-agent -s)'
         insertafter: EOF
 
-- name: Devbox components
-  import_playbook: azcli.yml
+- name: az cli
+  import_playbook: playbooktemp/azcli.yml
 
-- name: Devbox components
-  import_playbook: gh.yml
+- name: gh
+  import_playbook: playbooktemp/gh.yml
 
-- name: Devbox components
-  import_playbook: dotnet6.yml
+- name: dotnet6
+  import_playbook: playbooktemp/dotnet6.yml
 
-- name: Devbox components
-  import_playbook: kubectl.yml
+- name: kubectl
+  import_playbook: playbooktemp/kubectl.yml
 
-- name: Devbox components
-  import_playbook: golang.yml
+- name: golang
+  import_playbook: playbooktemp/golang.yml
 
-- name: Devbox components
-  import_playbook: cloudflared.yml
+- name: cloudflared
+  import_playbook: playbooktemp/cloudflared.yml
 
-- name: Devbox components
-  import_playbook: vim.yml
+- name: vim
+  import_playbook: playbooktemp/vim.yml
 
   # TODO make this conditional based on a tag:
-- name: Devbox components
-  import_playbook: code-server.yml
+- name: code-server
+  import_playbook: playbooktemp/code-server.yml
 
-- name: Devbox components
-  import_playbook: azdevcli.yml
+- name: azdevcli
+  import_playbook: playbooktemp/azdevcli.yml
 
-- name: Devbox components
-  import_playbook: misc.yml
+- name: helm
+  import_playbook: playbooktemp/helm.yml
 
-- name: Devbox components
-  import_playbook: checkreboot.yml
+- name: kind
+  import_playbook: playbooktemp/kind.yml
+
+- name: misc
+  import_playbook: playbooktemp/misc.yml
+
+- name: checkreboot
+  import_playbook: playbooktemp/checkreboot.yml
 
 # Look at kind vs minikube for azure thing
 # ensure compose with private

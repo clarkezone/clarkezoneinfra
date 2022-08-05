@@ -24,12 +24,11 @@
     - name: dotnet autocomplete
       ansible.builtin.blockinfile:
        path: "{{ ansible_user_dir }}/.zshrc"
+       marker: "# {mark} dotnetautocomplete"
        block: |
         _dotnet_zsh_complete()
         {
           local completions=("$(dotnet complete "$words")")
-        
           reply=( "${(ps:\n:)completions}" )
         }
-
         compctl -K _dotnet_zsh_complete dotnet

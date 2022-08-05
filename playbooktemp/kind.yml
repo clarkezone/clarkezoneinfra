@@ -11,6 +11,6 @@
         mode: '0755'
     - name: Install kind completion
       become: true
-      command: "sudo bash -c 'kind completion zsh > /usr/local/share/zsh/site-functions/_kind zsh'"
+      command: "sudo bash -c 'kind completion zsh > /usr/local/share/zsh/site-functions/_kind'"
       args:
         creates: /usr/local/share/zsh/site-functions/_kind
