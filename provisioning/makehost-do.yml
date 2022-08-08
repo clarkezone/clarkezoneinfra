@@ -1,11 +1,9 @@
-#ansiblk-playbook makehost-do.yml
+# Create a vars file and specify required vars then
+# ansible-playbook makehost-do.yml --extra-vars "@../vars/monitoringhost.yml"
 ---
 - hosts: localhost
   connection: local
  
-  vars_files:
-       - ../vars/default.yml 
-  
   tasks:
     - name: Show Droplet info
       ansible.builtin.debug:
