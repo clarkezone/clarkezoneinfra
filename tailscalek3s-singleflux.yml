@@ -1,0 +1,18 @@
+# Ensure this cmd
+#  ansible-playbook -i inventory/hosts_for_monitoring.ini k3sfluxbox.yml -u root --extra-vars "uusername=<USERNAME>" --extra-vars "upassword=<PASSWORD>" --extra-vars "repokeys=https://github.com/<USERNAME>.keys"
+
+- hosts: all
+
+  tasks:
+
+- name: userssh
+  import_playbook: provisioning/userssh.yml
+
+- name: tailscale
+  import_playbook: playbooktemp/tailscale.yml
+
+## tailscale
+#
+#k3s
+#
+#flux
