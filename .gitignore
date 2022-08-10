@@ -1,3 +1,4 @@
 vars/*.yml
 inventory/*.ini
+inventory/group_vars
 *.swp
