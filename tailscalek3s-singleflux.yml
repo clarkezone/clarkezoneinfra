@@ -11,8 +11,7 @@
 - name: tailscale
   import_playbook: playbooktemp/tailscale.yml
 
-## tailscale
-#
-#k3s
-#
+- name: k3s
+  import_playbook: dependencies/k3s-ansible/site.yml
+
 #flux
