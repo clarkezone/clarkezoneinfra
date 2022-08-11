@@ -1,7 +1,8 @@
 #ansible-playbook -i ../inventory/hosts_for_monitoring.ini userssh.yml -u root --extra-vars "uusername=<USERNAME>" --extra-vars "upassword=<PASSWORD>"
 ---
-- hosts: all
- 
+- hosts: master
+  remote_user: root
+  gather_facts: false 
   tasks:
     - name: Creating user "{{ uusername }}" with admin access
       become: true
