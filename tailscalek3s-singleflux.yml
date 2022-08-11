@@ -1,9 +1,14 @@
 # Ensure this cmd
 #  ansible-playbook -i inventory/hosts_for_monitoring.ini k3sfluxbox.yml -u root --extra-vars "uusername=<USERNAME>" --extra-vars "upassword=<PASSWORD>" --extra-vars "repokeys=https://github.com/<USERNAME>.keys"
+#  or create group_vars/all.yml and declare variables in there
+#  ansible-playbook -i inventory/hosts_for_monitoring.ini tailscalek3s-singleflux.yml -u root -K
 
 - hosts: all
 
   tasks:
+
+- name: make DO Droplet
+  import_playbook: provisioning/makehost-do.yml
 
 - name: userssh
   import_playbook: provisioning/userssh.yml

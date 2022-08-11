@@ -56,3 +56,8 @@
         allow_no_value: true
         option: "{{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }} host_name={{ do_host_name }}"
 
+     - name: Add host to Host group
+       add_host:
+         name: "{{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }}"
+         groups: master
+       when: mydroplet.droplet is defined
