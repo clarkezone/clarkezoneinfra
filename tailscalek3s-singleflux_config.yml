@@ -1,0 +1,12 @@
+
+
+- hosts: localhost
+  connection: local
+
+- name: make DO Droplet
+  import_playbook: provisioning/makehost-do.yml
+
+- name: getconfig
+  import_playbook: provisioning/getmonitoringconfig.yml
+
+#flux

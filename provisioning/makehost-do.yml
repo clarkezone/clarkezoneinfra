@@ -1,11 +1,11 @@
-# Create a vars file and specify required vars then
+# create a vars file and specify required vars then
 # ansible-playbook makehost-do.yml --extra-vars "@../vars/monitoringhost.yml"
 ---
 - hosts: localhost
   connection: local
  
   tasks:
-    - name: Show Droplet info
+    - name: show droplet info
       ansible.builtin.debug:
         msg: |
           {{ oauth_token }}

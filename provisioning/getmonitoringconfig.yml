@@ -1,0 +1,9 @@
+---
+- hosts: master
+ 
+  tasks:
+    - name: get monitoring kubecfg
+      become: true
+      ansible.builtin.fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: "/home/{{ ansible_user_id }}/monitoringkubeconfig.yml"
