@@ -31,33 +31,15 @@
         ssh_keys:
           - "{{ my_ssh_key.data.ssh_key.id }}"
       register: my_droplet
-  
-    - name: Show Droplet info
-      ansible.builtin.debug:
-        msg: |
-          Droplet ID is {{ my_droplet.data.droplet.id }}
-          First Public IPv4 is {{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }}
-          First Private IPv4 is {{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'private')).0.ip_address | default('<none>', true) }}
-  
-    - name: Tag a resource; creating the tag if it does not exist
-      community.digitalocean.digital_ocean_tag:
-        oauth_token: "{{ oauth_token }}"
-        name: "{{ item }}"
-        resource_id: "{{ my_droplet.data.droplet.id }}"
-        state: present
-      loop:
-        - devbox
-
-          #    - name: write local
-          #      community.general.ini_file:
-          #        path: "{{ playbook_dir }}/../inventory/hosts_for_monitoring.ini"
-          #        section: monitoring
-          #        create: yes
-          #        allow_no_value: true
-          #        option: "{{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }} host_name={{ do_host_name }}"
+ 
+    - name: debug
+      debug:
+        msg: "Droplet: {{my_droplet}}" 
 
     - name: Add host to Host group
       add_host:
         name: "{{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }}"
         groups: master
-      when: mydroplet.droplet is defined
+        ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+      when: my_droplet.data is defined
+      changed_when: false
