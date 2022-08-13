@@ -20,4 +20,5 @@
 - name: k3s
   import_playbook: dependencies/k3s-ansible/site.yml
 
-#flux
+- name: flux
+  import_playbook: playbooktemp/flux.yml
