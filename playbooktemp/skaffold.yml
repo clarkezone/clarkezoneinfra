@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+# install flux
+  tasks:
+    - name: Set fact Amd64 fact on x86_64 platforms
+      set_fact:
+        linux_platform: amd64
+      when: ansible_architecture == "x86_64"
+    
+    - name: Set fact Arm fact on Arm platforms
+      set_fact:
+        linux_platform: arm64
+      when: ansible_architecture == "arm"
+
+    - name: Download Skaffold
+      become: true
+      get_url:
+        url: "https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-{{ linux_platform }}"
+        dest: "{{ local_bin_dir }}/skaffold"
+        mode: 0755
+
+    - name: Ensure skaffold autocomplete
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'source <(skaffold completion zsh)'
+        insertafter: EOF

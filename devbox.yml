@@ -126,6 +126,9 @@
 - name: flux
   import_playbook: playbooktemp/flux.yml
 
+- name: skaffold
+  import_playbook: playbooktemp/skaffold.yml
+
 - name: misc
   import_playbook: playbooktemp/misc.yml
 
