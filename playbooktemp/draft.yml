@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+# install draft
+  tasks:
+    - name: Set fact Amd64 fact on x86_64 platforms
+      set_fact:
+        linux_platform: amd64
+      when: ansible_architecture == "x86_64"
+    
+    - name: Set fact Arm fact on Arm platforms
+      set_fact:
+        linux_platform: arm64
+      when: ansible_architecture == "arm"
+
+    - name: Download Draft
+      become: true
+      get_url:
+        url: "https://github.com/Azure/draft/releases/download/v0.0.22/draft-linux-{{ linux_platform }}"
+        dest: "{{ local_bin_dir }}/draft"
+        mode: 0755
+
+    - name: Install draft completion
+      become: true
+      command: "sudo bash -c 'draft completion zsh > /usr/local/share/zsh/site-functions/_draft'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_draft
