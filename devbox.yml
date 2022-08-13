@@ -1,5 +1,6 @@
 # Ensure this cmd is run from within the playbook dir:
 #  ansible-playbook -i ../devbox.ini -u james devbox.yml -K 
+#  ansible-playbook -i localhost, --connection=local devbox.yml -K
 # TODO: how to store become password in vault?
 
 - hosts: all
@@ -121,6 +122,9 @@
 
 - name: kind
   import_playbook: playbooktemp/kind.yml
+
+- name: flux
+  import_playbook: playbooktemp/flux.yml
 
 - name: misc
   import_playbook: playbooktemp/misc.yml

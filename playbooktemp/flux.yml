@@ -1,0 +1,25 @@
+---
+- hosts: all
+  vars_files:
+  - ../vars/devboxtemp.yml
+# install flux
+  tasks:
+    - name: Download flux
+      become: true
+      get_url:
+        url: https://fluxcd.io/install.sh
+        dest: "{{ download_dir }}/fluxcd.sh"
+        mode: 0755
+
+    - name: Run setup
+      become: true
+      command: /tmp/fluxcd.sh
+      args:
+        chdir: "{{ download_dir }}"
+        creates: /usr/local/bin/flux
+
+    - name: Install flux completion
+      become: true
+      command: "sudo bash -c 'flux completion zsh > /usr/local/share/zsh/site-functions/_flux'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_flux

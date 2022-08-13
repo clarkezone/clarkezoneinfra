@@ -1,5 +1,7 @@
 # Ensure this cmd
 #  ansible-playbook -i inventory/hosts_for_monitoring.ini k3sfluxbox.yml -u root --extra-vars "uusername=<USERNAME>" --extra-vars "upassword=<PASSWORD>" --extra-vars "repokeys=https://github.com/<USERNAME>.keys"
+#  ansible-playbook tailscalek3s-singleflux.yml --extra-vars=@inventory/group_vars/dohost.yml --extra-vars=@inventory/group_vars/user.yml --extra-vars=@inventory/group_vars/k3s.yml -K
+#  ansible-playbook tailscalek3s-singleflux_config.yml --extra-vars=@inventory/group_vars/dohost.yml -K
 #  or create group_vars/all.yml and declare variables in there
 #  ansible-playbook -i inventory/hosts_for_monitoring.ini tailscalek3s-singleflux.yml -u root -K
 
