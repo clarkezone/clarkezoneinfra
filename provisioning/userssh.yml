@@ -12,6 +12,7 @@
         name: "{{ uusername }}"
         password: "{{ upassword | password_hash('sha512') }}"
         groups: adm,sudo
+        shell: /bin/bash
         append: yes
     - name: Set authorized keys taken from url
       become: true
