@@ -1,4 +1,5 @@
 vars/*.yml
+!vars/default.yml
 inventory/*.ini
 inventory/group_vars
 *.swp

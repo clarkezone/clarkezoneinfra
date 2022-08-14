@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars_files:
-  - ../vars/devboxtemp.yml
+  - ../vars/default.yml
 # install draft
   tasks:
     - name: Set fact Amd64 fact on x86_64 platforms

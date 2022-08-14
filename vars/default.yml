@@ -1,0 +1,6 @@
+---
+download_dir: /tmp
+golang_dir: /usr/local/go
+azd_bin: /usr/local/bin/azd
+local_dir: /usr/local
+local_bin_dir: /usr/local/bin

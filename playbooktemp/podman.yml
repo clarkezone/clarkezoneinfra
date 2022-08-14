@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars_files:
-  - ../vars/devboxtemp.yml
+  - ../vars/default.yml
   vars:
    podman_packages: [ 'podman', 'qemu-system', 'qemu-user-static']
   tasks:

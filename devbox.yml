@@ -6,7 +6,7 @@
 - hosts: all
 
   vars_files:
-  - vars/devboxtemp.yml
+  - vars/default.yml
 
   vars:
    # not included: 'qemu-system', 'qemu-user-static',
