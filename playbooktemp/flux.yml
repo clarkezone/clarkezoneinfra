@@ -1,7 +1,7 @@
 ---
 - hosts: all
-    vars_files:
-    - ../vars/default.yml
+  vars_files:
+  - "{{ playbook_dir }}/vars/default.yml"
 
 # install flux
   tasks:

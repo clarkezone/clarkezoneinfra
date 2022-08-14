@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars_files:
-  - ../vars/default.yml
+  - "{{ playbook_dir }}/vars/default.yml"
 # install flux
   tasks:
     - name: Set fact Amd64 fact on x86_64 platforms

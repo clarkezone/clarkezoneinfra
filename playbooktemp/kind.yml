@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars_files:
-  - ../vars/default.yml
+  - "{{ playbook_dir }}/vars/default.yml"
   tasks:
     - name: Download kind
       become: true
