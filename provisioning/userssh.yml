@@ -25,7 +25,7 @@
 
     - name: Set authorized key for remote user
       authorized_key:
-        user: "{{ create_user }}"
+        user: "{{ uusername }}"
         state: present
         key: "{{ copy_local_key }}"
 
