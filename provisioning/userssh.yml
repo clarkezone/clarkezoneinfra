@@ -6,6 +6,7 @@
   tasks:
     - name: Wait 600 seconds for target connection to become reachable/usable
       ansible.builtin.wait_for_connection:
+
     - name: Creating user "{{ uusername }}" with admin access
       become: true
       user: 
@@ -14,13 +15,15 @@
         groups: adm,sudo
         shell: /bin/bash
         append: yes
+
     - name: Set authorized keys taken from url
       become: true
       ansible.posix.authorized_key:
         user: "{{ uusername }}"
         state: present
         key: "{{ repokeys }}"
-        - name: Set authorized key for remote user
+
+    - name: Set authorized key for remote user
       authorized_key:
         user: "{{ create_user }}"
         state: present
