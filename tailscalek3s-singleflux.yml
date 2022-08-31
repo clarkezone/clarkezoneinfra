@@ -17,6 +17,9 @@
 - name: tailscale
   import_playbook: playbooktemp/tailscale.yml
 
+- name: enable wirewall blocking all incoming
+  import_playbook: provisioning/securehost-do.yml
+
 - name: k3s
   import_playbook: dependencies/k3s-ansible/site.yml
 

@@ -1,0 +1,53 @@
+# create a vars file and specify required vars then
+# ansible-playbook makehost-do.yml --extra-vars "@../vars/monitoringhost.yml"
+---
+- hosts: localhost
+  connection: local
+ 
+  tasks:
+    - name: show droplet info
+      ansible.builtin.debug:
+        msg: |
+          {{ oauth_token }}
+          foo
+    - name: Create SSH key
+      community.digitalocean.digital_ocean_sshkey:
+        oauth_token: "{{ oauth_token }}"
+        name: ansible_server
+        ssh_pub_key: "{{ copy_local_key }}"
+        state: present
+      register: my_ssh_key
+
+    - name: Create a Firewall named my-firewall
+      digital_ocean_firewall:
+        name: "Noinbound"
+        state: present
+        inbound_rules:
+        outbound_rules:
+          - protocol: "tcp"
+            ports: "1-65535"
+            destinations:
+              addresses: ["0.0.0.0/0", "::/0"]
+          - protocol: "udp"
+            ports: "1-65535"
+            destinations:
+              addresses: ["0.0.0.0/0", "::/0"]
+          - protocol: "icmp"
+            ports: "1-65535"
+            destinations:
+              addresses: ["0.0.0.0/0", "::/0"]
+        droplet_ids: []
+
+    - name: Create a new Droplet
+      community.digitalocean.digital_ocean_droplet:
+        oauth_token: "{{ oauth_token }}"
+        state: present
+        name: "{{ do_host_name }}"
+        unique_name: true
+        size: "{{ do_size }}"
+        region: sfo3
+        image: ubuntu-22-04-x64
+        firewall: "Noinbound"
+        wait_timeout: 500
+        ssh_keys:
+          - "{{ my_ssh_key.data.ssh_key.id }}"
