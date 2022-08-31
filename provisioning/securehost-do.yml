@@ -19,7 +19,7 @@
       register: my_ssh_key
 
     - name: Create a Firewall named my-firewall
-      digital_ocean_firewall:
+      community.digitalocean.digital_ocean_firewall:
         name: "Noinbound"
         state: present
         inbound_rules:
