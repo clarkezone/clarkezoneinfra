@@ -17,6 +17,9 @@
 - name: tailscale
   import_playbook: playbooktemp/tailscale.yml
 
+- name: tailscale
+  import_playbook: playbooktemp/tailscalegetip.yml
+
 - name: enable wirewall blocking all incoming
   import_playbook: provisioning/securehost-do.yml
 

@@ -1,0 +1,20 @@
+---
+- hosts: all
+  tasks:
+    - name: tailscale get ip
+      become: true
+      ansible.builtin.command: "tailscale ip -4"
+      changed_when: false
+      register: ans_output
+      failed_when: ans_output.rc != 0
+
+    - name: set fact from result
+      ansible.builtin.set_fact:
+        tailscale_ip: "{{ ans_output.stdout | trim }}"
+
+    - name: show ip
+      ansible.builtin.debug:
+        msg: "{{ tailscale_ip }}"
+
+# todo: strip  return
+# todo: set named variable
