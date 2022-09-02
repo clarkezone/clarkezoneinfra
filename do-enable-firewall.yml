@@ -1,0 +1,11 @@
+# Ensure this cmd
+#  ansible-playbook tailscalek3s-do-enable-firewall.yml --extra-vars=@inventory/group_vars/dohost.yml
+
+- hosts: localhost
+  connection: local
+
+- name: make DO Droplet
+  import_playbook: provisioning/makehost-do.yml
+
+- name: enable firewall blocking all incoming
+  import_playbook: provisioning/securehost-do.yml
