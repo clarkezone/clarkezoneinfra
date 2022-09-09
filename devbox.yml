@@ -132,6 +132,9 @@
 - name: draft
   import_playbook: playbooktemp/draft.yml
 
+- name: draft
+  import_playbook: playbooktemp/dive.yml
+
 - name: misc
   import_playbook: playbooktemp/misc.yml
 
