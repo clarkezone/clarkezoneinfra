@@ -1,0 +1,16 @@
+---
+- hosts: all
+  vars_files:
+  - "{{ playbook_dir }}/../vars/default.yml"
+  tasks:
+# install dive
+    - name: Download dive
+      become: true
+      get_url:
+        url: "https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb"
+        dest: "{{ download_dir }}"
+
+    - name: Install a .deb package from file
+      become: true
+      ansible.builtin.apt:
+        deb: "{{ download_dir }}/dive_0.9.2_linux_amd64.deb"
