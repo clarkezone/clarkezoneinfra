@@ -13,7 +13,7 @@
 
     - name: Run dotnet-install script
       become: true
-      command: "{{ download_dir }}/dotnet-install --channel 7.0"
+      command: "{{ download_dir }}/dotnet-install.sh --channel 7.0"
       args:
         chdir: "{{ download_dir }}"
         creates: "{{ ansible_user_dir }}/.dotnet"
