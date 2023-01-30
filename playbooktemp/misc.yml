@@ -15,10 +15,9 @@
       include_role:
         name: andrewrothstein.k9s
 
-    - name: yq
-      include_role:
-        version: v2.1.7
-        name: andrewrothstein.yq
+          #    - name: yq
+          #      include_role:
+          #        name: andrewrothstein.yq
 
     - name: jq
       include_role:
