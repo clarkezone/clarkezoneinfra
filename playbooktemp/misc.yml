@@ -17,6 +17,7 @@
 
     - name: yq
       include_role:
+        version: v2.1.7
         name: andrewrothstein.yq
 
     - name: jq
