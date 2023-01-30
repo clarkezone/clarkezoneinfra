@@ -104,6 +104,9 @@
 - name: vim
   import_playbook: playbooktemp/vim.yml
 
+- name: neovim
+  import_playbook: playbooktemp/neovim.yml
+
   # TODO make this conditional based on a tag:
 - name: code-server
   import_playbook: playbooktemp/code-server.yml

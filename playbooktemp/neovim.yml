@@ -1,0 +1,12 @@
+---
+- hosts: all
+  vars_files:
+  - "{{ playbook_dir }}/../vars/default.yml"
+# install helm
+  tasks:
+    - name: Download neovim package
+      become: true
+      get_url:
+        url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        dest: "{{ local_bin_dir }}/nvim"
+        mode: 0755
