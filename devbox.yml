@@ -90,7 +90,7 @@
   import_playbook: playbooktemp/gh.yml
 
 - name: dotnet6
-  import_playbook: playbooktemp/dotnet6.yml
+  import_playbook: playbooktemp/dotnet7.yml
 
 - name: kubectl
   import_playbook: playbooktemp/kubectl.yml

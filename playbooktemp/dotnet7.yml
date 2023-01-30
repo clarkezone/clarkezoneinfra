@@ -1,0 +1,37 @@
+---
+- hosts: all
+  vars_files:
+  - "{{ playbook_dir }}/../vars/default.yml"
+  tasks:
+# install .net 7
+    - name: Download dotnet 7 install script
+      become: true
+      get_url:
+        url: https://dot.net/v1/dotnet-install.sh
+        dest: "{{ download_dir }}/dotnet-install.sh"
+        mode: 0755
+
+    - name: Run dotnet-install script
+      become: true
+      command: "{{ download_dir }}/dotnet-install --channel 7.0"
+      args:
+        chdir: "{{ download_dir }}"
+        creates: "{{ ansible_user_dir }}/.dotnet"
+
+    - name: Ensure dotnet 7 in path
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'export PATH={{ ansible_user_dir }}/.dotnet:$PATH'
+        insertafter: EOF
+
+    - name: dotnet autocomplete
+      ansible.builtin.blockinfile:
+       path: "{{ ansible_user_dir }}/.zshrc"
+       marker: "# {mark} dotnetautocomplete"
+       block: |
+        _dotnet_zsh_complete()
+        {
+          local completions=("$(dotnet complete "$words")")
+          reply=( "${(ps:\n:)completions}" )
+        }
+        compctl -K _dotnet_zsh_complete dotnet
