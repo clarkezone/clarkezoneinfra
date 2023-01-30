@@ -8,14 +8,14 @@
       become: true
       get_url:
         url: https://dot.net/v1/dotnet-install.sh
-        dest: "{{ download_dir }}/dotnet-install.sh"
+        dest: "{{ ansible_user_dir }}/dotnet-install.sh"
         mode: 0755
 
     - name: Run dotnet-install script
       become: true
-      command: "{{ download_dir }}/dotnet-install.sh --channel 7.0"
+      command: "{{ ansible_user_dir }}/dotnet-install.sh --channel 7.0"
       args:
-        chdir: "{{ download_dir }}"
+        chdir: "{{ ansible_user_dir }}"
         creates: "{{ ansible_user_dir }}/.dotnet"
 
     - name: Ensure dotnet 7 in path
