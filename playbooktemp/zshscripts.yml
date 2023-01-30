@@ -1,0 +1,21 @@
+---
+- hosts: all
+  vars_files:
+  - "{{ playbook_dir }}/../vars/default.yml"
+  tasks:
+    - name: zshscripts
+      ansible.builtin.blockinfile:
+       path: "{{ ansible_user_dir }}/.zshrc"
+       marker: "# {mark} misc scripts"
+       block: |
+        kk() {
+                kubectl debug -it $1 --image=lightruncom/koolkits:$2 --image-pull-policy=Never --target=$3
+        }
+
+        merge() {
+                kubectl konfig merge ~/kubeconfigs/k3s.yaml  ~/kubeconfigs/k3s-c2.yaml > ~/kubeconfigs/merged.yaml
+        }
+
+        rename() {
+                ./infra/renamecontext.sh -i ~/monitoringkubeconfig.yml -c monitoringcluster -u monitoringuser -t monitoringcontext
+        }

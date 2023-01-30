@@ -144,6 +144,9 @@
 - name: checkreboot
   import_playbook: playbooktemp/checkreboot.yml
 
+- name: miscscripts
+  import_playbook: playbooktemp/zshscripts.yml
+
 # Look at kind vs minikube for azure thing
 # ensure compose with private
 # verify build of previewd
