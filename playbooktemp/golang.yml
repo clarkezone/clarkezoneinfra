@@ -7,7 +7,7 @@
       become: true
       unarchive:
         remote_src: yes
-        src: "https://go.dev/dl/go1.19.1.linux-amd64.tar.gz"
+        src: "https://go.dev/dl/go1.19.5.linux-amd64.tar.gz"
         dest: "{{ local_dir }}"
         creates: "{{ golang_dir }}"
 
