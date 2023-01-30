@@ -37,4 +37,6 @@
        - "github.com/spf13/cobra-cli@latest"
        - "github.com/client9/misspell/cmd/misspell@latest"
        - "sigs.k8s.io/kind@v0.14.0"
+       - "honnef.co/go/tools/cmd/staticcheck@latest"
+       - "github.com/derailed/popeye@latest"
          #       - "github.com/goreleaser/goreleaser@latest"
