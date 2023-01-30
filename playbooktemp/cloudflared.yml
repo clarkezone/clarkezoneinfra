@@ -12,7 +12,7 @@
 
         - name: cloudflared package
           ansible.builtin.apt_repository:
-            repo: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/ focal main"
+            repo: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared focal main"
             state: present
 
         - name: install cloudflared
