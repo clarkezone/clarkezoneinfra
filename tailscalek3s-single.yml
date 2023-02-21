@@ -1,0 +1,24 @@
+# Ensure this cmd
+#  ansible-playbook -i inventory/hosts_for_monitoring.ini k3sfluxbox.yml -u root --extra-vars "uusername=<USERNAME>" --extra-vars "upassword=<PASSWORD>" --extra-vars "repokeys=https://github.com/<USERNAME>.keys"
+#  ansible-playbook tailscalek3s-single.yml --extra-vars=@inventory/group_vars/dohost.yml --extra-vars=@inventory/group_vars/user.yml --extra-vars=@inventory/group_vars/k3s.yml -K
+#  ansible-playbook tailscalek3s-single_config.yml --extra-vars=@inventory/group_vars/dohost.yml -K
+#  or create group_vars/all.yml and declare variables in there
+#  ansible-playbook -i inventory/hosts_for_monitoring.ini tailscalek3s-single.yml -u root -K
+
+- hosts: localhost
+  connection: local
+
+- name: make DO Droplet
+  import_playbook: provisioning/makehost-do.yml
+
+- name: userssh
+  import_playbook: provisioning/userssh.yml
+
+- name: tailscale
+  import_playbook: playbooktemp/tailscale.yml
+
+- name: tailscale
+  import_playbook: playbooktemp/tailscalegetip.yml
+
+- name: k3s
+  import_playbook: dependencies/k3s-ansible/site.yml
