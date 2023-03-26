@@ -24,6 +24,18 @@
         line: 'export PATH={{ ansible_user_dir }}/.dotnet:$PATH'
         insertafter: EOF
 
+    - name: Ensure dotnet tools
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'export PATH={{ ansible_user_dir }}/.dotnet/tools:$PATH'
+        insertafter: EOF
+
+    - name: Ensure dotnet root
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'export DOTNET_ROOT=~/.dotnet'
+        insertafter: EOF
+
     - name: dotnet autocomplete
       ansible.builtin.blockinfile:
        path: "{{ ansible_user_dir }}/.zshrc"
