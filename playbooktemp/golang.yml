@@ -1,3 +1,4 @@
+# ansible-playbook -i localhost, --connection=local playbooktemp/golang.yml -K
 ---
 - hosts: all
   vars_files:
@@ -7,7 +8,8 @@
       become: true
       unarchive:
         remote_src: yes
-        src: "https://go.dev/dl/go1.19.5.linux-amd64.tar.gz"
+        src: "https://go.dev/dl/go1.20.4.linux-amd64.tar.gz"
+          
         dest: "{{ local_dir }}"
         creates: "{{ golang_dir }}"
 
