@@ -1,19 +1,21 @@
-$vmname = "devbox3"
-$vmmemory = "8gb"
-$cpucount = 8
-$vmserver = "localhost"
-$vmswtich = "default switch"
-$vmpath = "C:\ProgramData\Microsoft\Windows\Hyper-V\"+$vmname
-$diskpath = "D:\Virtual hard disks\"+$vmname+".vhdx"
-$ubuntuiso = "d:\images\ubuntu-22.04-live-server-amd64.iso"
-
-#write-host $vmpath
-New-VM -Name $vmname -MemoryStartupBytes $vmmemory -Generation 2 -switchname $vmswtich
-New-VHD -Path $diskpath -SizeBytes 90GB -Dynamic
-Add-VMHardDiskDrive -VMName $vmname -Path $diskpath
-Set-VMProcessor $vmname -count $cpucount -Reserve 100
-#TODO: this doesn't work
-Set-VMDvdDrive -VMName $vmname -Path $ubuntuiso
-#TODO: how to disable secure boot?
-#TODO: how to disable snapshots
+$VMNAME = "devbox5"
+$VHDPATH = "d:\Virtual hard disks\$VMNAME.vhdx"
+$BOOTVHDPATH = "D:\images\ubuntu-22.04.1-live-server-amd64.iso"
+$VM = @{
+	Name = $VMName
+	MemoryStartupBytes = 12582912000
+	Generation = 2
+	NewVHDPath = "$VHDPATH"
+	NewVHDSizeBytes = 50GB
+	SwitchName = "Default Switch"
+}
+new-vm @vm
+Set-VMMemory -VMName $VMNAME -DynamicMemoryEnabled $false
+Add-VMDvdDrive -VMName $VMNAME -Path $BOOTVHDPATH
+set-VMFirmware -EnableSecureBoot Off -VMName $VMNAME
+$drive = Get-VMDvdDrive -VMName $VMName
+Set-VMFirmware -VMName $VMNAME -BootOrder $drive
+Set-VMProcessor -VMName $VMNAME -Count 10
+set-vm $VMNAME -CheckpointType Disabled
+Enable-VMIntegrationService -VMName $VMNAME -Name "Guest Service Interface"
 #TODO: how to setup ubunutu unattended
