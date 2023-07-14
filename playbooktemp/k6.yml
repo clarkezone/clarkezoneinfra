@@ -1,0 +1,40 @@
+---
+- hosts: all
+  tasks:
+# install k6
+    - name: k6
+      block:
+#        - name: github pgpkey
+#          become: true
+#          ansible.builtin.get_url:
+#            url: https://keyserver.ubuntu.com:80
+#            dest: /usr/share/keyrings/k6-archive-keyring.gpg
+#
+#        - name: gh repo
+#          become: true
+#          ansible.builtin.apt_repository:
+#            repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main"
+#            state: present
+#              
+#        - name: Install k6
+#          become: true
+#          apt: 
+#            name: k6
+#            update_cache: yes
+
+         - name: Download k6
+           become: true
+           get_url:
+             url: "https://github.com/grafana/k6/releases/download/v0.45.0/k6-v0.45.0-linux-amd64.deb"
+             dest: "{{ download_dir }}"
+     
+         - name: Install k6 from .deb
+           become: true
+           ansible.builtin.apt:
+             deb: "{{ download_dir }}/k6-v0.45.0-linux-amd64.deb"
+
+         - name: Install kind completion
+           become: true
+           command: "sudo bash -c 'k6 completion zsh > /usr/local/share/zsh/site-functions/_k6'"
+           args:
+             creates: /usr/local/share/zsh/site-functions/_k6

@@ -147,6 +147,9 @@
 - name: miscscripts
   import_playbook: playbooktemp/zshscripts.yml
 
+- name: k6
+  import_playbook: playbooktemp/k6.yml
+
 # Look at kind vs minikube for azure thing
 # ensure compose with private
 # verify build of previewd
