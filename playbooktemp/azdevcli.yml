@@ -17,3 +17,9 @@
       args:
         chdir: "{{ download_dir }}"
         creates: /usr/local/bin/azd
+
+    - name: Install azd completion
+      become: true
+      command: "sudo bash -c 'azd completion zsh > /usr/local/share/zsh/site-functions/_azd'"
+      args:
+        creates: /usr/local/share/zsh/site-functions/_azd
