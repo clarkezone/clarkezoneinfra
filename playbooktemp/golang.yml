@@ -46,11 +46,8 @@
     - name: install golang tools script
       copy:
         src: "{{ playbook_dir }}/../files/installgolangtools.sh"
-          # dest: "/home/{{ current_user }}/installgolangtools.sh"
-        dest: "/home/james/installgolangtools.sh"
+        dest: "/home/{{ ansible_user_id }}/installgolangtools.sh"
         backup: no
-          # group: "{{ current_user }}"
-          # owner: "{{ current_user }}"
-        group: "james"
-        owner: "james"
+        group: "{{ ansible_user_id }}"
+        owner: "{{ ansible_user_id }}"
         mode: 0755
