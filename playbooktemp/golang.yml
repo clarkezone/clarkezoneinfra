@@ -42,3 +42,15 @@
        - "honnef.co/go/tools/cmd/staticcheck@latest"
        - "github.com/derailed/popeye@latest"
          #       - "github.com/goreleaser/goreleaser@latest"
+         
+    - name: install golang tools script
+      copy:
+        src: "{{ playbook_dir }}/../files/installgolangtools.sh"
+          # dest: "/home/{{ current_user }}/installgolangtools.sh"
+        dest: "/home/james/installgolangtools.sh"
+        backup: no
+          # group: "{{ current_user }}"
+          # owner: "{{ current_user }}"
+        group: "james"
+        owner: "james"
+        mode: 0755
