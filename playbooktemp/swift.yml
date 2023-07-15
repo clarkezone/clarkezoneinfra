@@ -1,0 +1,68 @@
+# ansible-playbook -i localhost, --connection=local playbooktemp/swift.yml -K
+---
+- hosts: all
+  vars_files:
+  - "{{ playbook_dir }}/../vars/default.yml"
+  
+  vars:
+   sys_packages: [ 'binutils', 'git', 'gnupg2', 'libc6-dev', 'libcurl4-openssl-dev', 'libedit2',  'libgcc-9-dev', 'libsqlite3-0', 'libstdc++-9-dev', 'libxml2-dev', 'libz3-dev', 'pkg-config', 'tzdata', 'unzip', 'zlib1g-dev']
+   local_dir: /usr/local
+   swiftlang_dir: /usr/local/swift
+   download_dir: /tmp
+     # TODO libpython
+
+  tasks:
+  # Install Packages to support swift
+    - name: Update apt-get repo and cache
+      become: true
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: Upgrade all apt packages
+      become: true
+      apt: upgrade=dist force_apt_get=yes
+
+    - name: Install required system packages
+      become: true
+      apt: name={{ sys_packages }} state=latest
+
+    - name: Recursively remove existing swift dir
+      become: true
+      ansible.builtin.file:
+        path: "{{ swiftlang_dir }}"
+        state: absent
+
+    - name: Ensure swift
+      become: true
+      ansible.builtin.file:
+        path: "{{ swiftlang_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download and expand swift
+      become: true
+      unarchive:
+        remote_src: yes
+        src: "https://download.swift.org/swift-5.8.1-release/ubuntu2204/swift-5.8.1-RELEASE/swift-5.8.1-RELEASE-ubuntu22.04.tar.gz"
+        dest: "{{ download_dir }}"
+        list_files: yes
+        creates: "{{ download_dir }}/swift-5.8.1-RELEASE-ubuntu22.04.tar.gz"
+      register: archive_contents
+
+        #    - name: debug archive_contents
+        #      debug: var=archive_contents
+
+    - name: stat uncompressed
+      stat: 
+        path: "{{ download_dir }}/{{ archive_contents.files[0] }}"
+      register: compressed_stat
+    
+    - name: Move swift lib into place
+      become: true
+      command: mv "{{ download_dir }}/{{ archive_contents.files[0] }}" "{{ swiftlang_dir }}/."
+      when: compressed_stat.stat.exists
+
+    - name: Ensure swiftlang in path
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        line: 'export PATH={{ swiftlang_dir }}/usr/bin:$PATH'
+        insertafter: EOF
