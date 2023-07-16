@@ -26,7 +26,7 @@
         insertafter: EOF
 
     - name: golang install commands
-      become: true
+      # if this works it's because become was removed
       ansible.builtin.command: "/usr/local/go/bin/go install {{ item }}"
       changed_when: false
       register: ans_output
@@ -41,6 +41,10 @@
        - "sigs.k8s.io/kind@v0.14.0"
        - "honnef.co/go/tools/cmd/staticcheck@latest"
        - "github.com/derailed/popeye@latest"
+       - "github.com/go-delve/delve/cmd/dlv@latest"
+       - "cuelang.org/go/cmd/cue@latest"
+       - "github.com/goreleaser/goreleaser@latest"
+       - "github.com/cheat/cheat/cmd/cheat@latest"
          #       - "github.com/goreleaser/goreleaser@latest"
          
     - name: install golang tools script
