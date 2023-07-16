@@ -6,7 +6,7 @@ $VM = @{
 	MemoryStartupBytes = 12582912000
 	Generation = 2
 	NewVHDPath = "$VHDPATH"
-	NewVHDSizeBytes = 100GB
+	NewVHDSizeBytes = 200GB
 	SwitchName = "Default Switch"
 }
 new-vm @vm
