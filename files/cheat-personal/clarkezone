@@ -1,0 +1,6 @@
+---
+tags: [ docker ]
+---
+# To install a package:
+docker do cool add <package>
+

@@ -1,0 +1,10 @@
+---
+tags: [ disk resize ]
+---
+
+df -h 
+lsblk
+sudo lvresize -t -v -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
+sudo lvresize -v -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
+
+resize2fs -p /dev/mapper/ubuntu–vg-ubuntu–lv

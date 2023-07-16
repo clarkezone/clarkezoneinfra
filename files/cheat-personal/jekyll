@@ -1,0 +1,15 @@
+---
+tags: [ jekyll,blog ]
+---
+# To install a package:
+docker run -it --rm --entrypoint /bin/sh -v /home/james/src/:/src -p 0.0.0.0:4000:4000 registry.hub.docker.com/clarkezone/jekyll:sha-df0a146
+
+# works only on ubuntu 22.04
+docker run -it --rm --entrypoint /bin/sh -v /home/james/src/:/src -p 0.0.0.0:4000:4000 ruby:latest
+
+gem install jekyll bundler
+
+cd /src/github
+bundle install
+bundle exec jekyll serve --host=0.0.0.0
+
