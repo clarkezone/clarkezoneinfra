@@ -46,12 +46,3 @@
        - "github.com/goreleaser/goreleaser@latest"
        - "github.com/cheat/cheat/cmd/cheat@latest"
          #       - "github.com/goreleaser/goreleaser@latest"
-         
-    - name: install golang tools script
-      copy:
-        src: "{{ playbook_dir }}/../files/installgolangtools.sh"
-        dest: "/home/{{ ansible_user_id }}/installgolangtools.sh"
-        backup: no
-        group: "{{ ansible_user_id }}"
-        owner: "{{ ansible_user_id }}"
-        mode: 0755
